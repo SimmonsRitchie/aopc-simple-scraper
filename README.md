@@ -42,7 +42,7 @@ scrapeAndSave({
 })
 ```
 
-That command will only scrape criminal dockets with filing dates between Jan 1, 2023 and Jan 3 2023 for the five specific counties. The data will be saved as CSV and JSON files in the /path/to/output/directory directory.
+This command will scrape criminal dockets with filing dates between Jan 1, 2023 and Jan 3, 2023 for Clarion, Armstrong, Butler, Forest and Indiana counties. The data will be saved as CSV and JSON files in the /path/to/output/directory directory.
 
 ### Notes
 - Like all web scrapers, this tool is not guaranteed to work in the future. If the website changes, this tool may no longer work. As of Feb, 2023, this tool works with the current version of the AOPC website.
