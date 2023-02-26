@@ -2,7 +2,7 @@
 
 AOPC Simple Scraper is a web scraping tool built with Node.js that allows you to easily scrape criminal court dockets from the website of the Administrative Office of the Pennsylvania Courts and save the data as CSV and JSON files.
 
-Installation
+### Installation
 To use AOPC Simple Scraper, you will need to have Node.js installed on your computer. If you don't have Node.js installed, you can download it from the official website: [https://nodejs.org/en/download/](https://nodejs.org/en/download/)
 
 Once you have Node.js installed, clone this repository to your computer. Run the following command in your terminal:
