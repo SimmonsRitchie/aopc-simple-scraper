@@ -50,6 +50,7 @@ This command will scrape criminal dockets with filing dates between Jan 1, 2023 
 
 ### Notes
 - Like all web scrapers, this tool is not guaranteed to work in the future. If the website changes, this tool may no longer work. As of Feb, 2023, this tool works with the current version of the AOPC website.
+- The bulk of data for each docket is contained in a PDF file. This tool does not parse the PDF files. It only scrapes the data contained in the HTML tables on the website. A future enhancement to this tool could be to parse the PDF files and extract the data from them (eg. criminal charges).
 - If you find any bugs or have any suggestions, please open an issue or submit a pull request.
 
 ### License
