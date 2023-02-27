@@ -28,8 +28,6 @@ const scrape = async (
   filedStartDate,
   {
     filedEndDate = null,
-    docketHtmlDirPath = null,
-    docketJsonPath = null
   } = {}
 ) => {
   /**
@@ -37,8 +35,6 @@ const scrape = async (
    * @param {Array, String} counties List of counties to get data for. Use "*" for all counties.
    * @param {String} filedStartDate Start date of data to scrape in format 'YYYY-MM-DD'.
    * @param {String} options.filedEndDate End date of data to scrape in format 'YYYY-MM-DD'. Defaults to filedStartDate
-   * @param {String} options.docketHtmlDirPath Directory path to save HTML for each county's search results.
-   * @param {String} options.docketJsonPath File path to save docket data as JSON for all counties.
    * @returns {Array} Array of docket data objects
    */
 
