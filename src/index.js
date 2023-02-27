@@ -19,14 +19,15 @@ const scrapeAndSave = async (
     } = {}
 ) => {
     /**
-     * Scrape and upload criminal cases from website of the Administrative Office of Pennsylvania Courts
+     * Scrape criminal case docket data from website of the Administrative Office of Pennsylvania Courts and
+     * save to JSON and CSV files.
      * @param {String} options.filedStartDate Start date of data to scrape in format 'YYYY-MM-DD'. Defaults to yesterday, New York.
      * @param {String} options.filedEndDate End date of data to scrape in format 'YYYY-MM-DD'. Defaults to filedStartDate
      * @param {Array, String} options.counties List of counties to get data for. Use "*" for all counties. Defaults to "*"
      * @param {Array, String} options.outputPath Where to save the file. Defaults to "./"
-     *
+     * @returns undefined
      */
-    // Start
+    // start
     const startTime = dayjs().tz("America/New_York");
     console.log("Scrape begin:", startTime.format("ddd, MMM D, YYYY h:mm A"));
 
@@ -35,7 +36,7 @@ const scrapeAndSave = async (
         filedStartDate = dayjs().subtract(1, "day").format("YYYY-MM-DD");
     }
 
-    // validation
+    // validate
     const { error, value } = schemaFileDts.validate({
         filedStartDate,
         filedEndDate,
@@ -53,15 +54,15 @@ const scrapeAndSave = async (
         String(a.primaryParticipants).localeCompare(String(b.primaryParticipants))
     );
 
-    // write to file
+    // write to files
     if (dockets.length > 0) {
-        // write json
+        // json
         const docketJsonPath = `${outputPath}/dockets.json`;
         const prettyJson = JSON.stringify(dockets, null, 2);
         fs.writeFileSync(docketJsonPath, prettyJson);
         console.log(`Saved dockets as JSON to: ${docketJsonPath}`);
 
-        // write csv
+        // csv
         const docketCsvPath = `${outputPath}/dockets.csv`;
         const csvStr = arrayToCsv(dockets);
         fs.writeFileSync(docketCsvPath, csvStr);
@@ -71,7 +72,7 @@ const scrapeAndSave = async (
         console.log("No dockets found for the provided date range.");
     }
 
-    // scrape analysis
+    // analyze
     const endTime = dayjs().tz("America/New_York");
     console.log("Scrape end:", endTime.format("ddd, MMM D, YYYY h:mm A"));
     const scrapeDurationSec = endTime.diff(startTime, "seconds");
