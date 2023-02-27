@@ -129,7 +129,7 @@ const scrapeAndSave = async (
   const startTime = dayjs().tz("America/New_York");
   console.log("Scrape begin:", startTime.format("ddd, MMM D, YYYY h:mm A"));
 
-  // validation
+  // set defaults
   if (!filedStartDate) {
     filedStartDate = dayjs().subtract(1, "day").format("YYYY-MM-DD");
   }
