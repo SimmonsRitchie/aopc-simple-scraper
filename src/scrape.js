@@ -16,12 +16,11 @@ const {
   parseTokenFromDom,
 } = require("./utils/parse");
 const { ALL_COUNTIES } = require("./constants/counties");
+const { RETRY_OPTIONS } = require("./constants/fetch");
 const { asyncForEach, arrayToCsv } = require("./utils/misc");
 const { schemaFileDts } = require("./utils/validation");
 
-const RETRY_OPTIONS = {
-  retryInitialDelay: 1000,
-};
+
 
 const scrape = async (
   counties,
