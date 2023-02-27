@@ -1,4 +1,3 @@
-const scrapeAndSave = require("./src/scrape");
-
+const scrapeAndSave = require("./src");
 
 scrapeAndSave()
