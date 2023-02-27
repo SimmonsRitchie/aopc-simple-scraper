@@ -1,13 +1,5 @@
 // const fetch = require("node-fetch");
 const fetch = require("@adobe/node-fetch-retry");
-const {
-  parseCookies,
-  exitOnBadStatus,
-  buildFormData,
-  parseDocketsFromHtml,
-  parseTokenFromDom,
-} = require("./utils/parse");
-
 const fs = require("fs");
 const { parse } = require("node-html-parser");
 const dayjs = require("dayjs");
@@ -15,6 +7,14 @@ var utc = require("dayjs/plugin/utc"); // dependent on utc plugin
 const timezone = require("dayjs/plugin/timezone");
 dayjs.extend(utc);
 dayjs.extend(timezone);
+
+const {
+  parseCookies,
+  exitOnBadStatus,
+  buildFormData,
+  parseDocketsFromHtml,
+  parseTokenFromDom,
+} = require("./utils/parse");
 const { ALL_COUNTIES } = require("./constants/counties");
 const { asyncForEach, arrayToCsv } = require("./utils/misc");
 const { schemaFileDts } = require("./utils/validation");
