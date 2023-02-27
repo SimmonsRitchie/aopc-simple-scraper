@@ -29,7 +29,8 @@ const scrape = async (
   } = {}
 ) => {
   /**
-   * Scrape newly-filed criminal cases from website of the Administrative Office of Pennsylvania Courts
+   * Fetch and parse HTML from website of the Administrative Office of Pennsylvania Courts in order to 
+   * get criminal case docket data.
    * @param {Array, String} counties List of counties to get data for. Use "*" for all counties.
    * @param {String} filedStartDate Start date of data to scrape in format 'YYYY-MM-DD'.
    * @param {String} options.filedEndDate End date of data to scrape in format 'YYYY-MM-DD'. Defaults to filedStartDate
