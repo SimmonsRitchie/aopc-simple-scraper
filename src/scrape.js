@@ -6,6 +6,7 @@ var utc = require("dayjs/plugin/utc"); // dependent on utc plugin
 const timezone = require("dayjs/plugin/timezone");
 dayjs.extend(utc);
 dayjs.extend(timezone);
+const async = require("async");
 
 const {
   parseCookies,
@@ -16,18 +17,47 @@ const {
 } = require("./utils/parse");
 const { ALL_COUNTIES } = require("./constants/counties");
 const { RETRY_OPTIONS } = require("./constants/fetch");
-const { asyncForEach } = require("./utils/misc");
 const { schemaFileDts } = require("./utils/validation");
 
 
+const docketData = [];
 
-const scrape = async (
+
+const scrapeCounty = async ({ county, cookies, token, filedStartDate, filedEndDate }) => {
+  console.log(`Getting docket data for ${county}...`);
+  const form = buildFormData(token, county, filedStartDate, filedEndDate);
+  const resCases = await fetch("https://ujsportal.pacourts.us/CaseSearch", {
+    retryOptions: RETRY_OPTIONS,
+    headers: {
+      ...form.getHeaders(),
+      accept: "*/*",
+      "user-agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36",
+      cookie: cookies,
+    },
+    body: form,
+    method: "POST",
+  })
+    .then((res) => {
+      return exitOnBadStatus(res);
+    })
+    .catch((err) => {
+      throw err;
+    });
+
+  const docketsHtml = await resCases.text();
+  const countyDockets = parseDocketsFromHtml(docketsHtml);
+  docketData.push(...countyDockets);
+};
+
+
+const scrape = (
   counties,
   filedStartDate,
   {
     filedEndDate = null,
   } = {}
-) => {
+) => new Promise(async (resolve, reject) => {
   /**
    * Fetch and parse HTML from website of the Administrative Office of Pennsylvania Courts in order to 
    * get criminal case docket data.
@@ -73,35 +103,20 @@ const scrape = async (
   console.log("Got AOPC cookies and token");
 
   // Step two: Get cases data
-  const docketData = [];
-  await asyncForEach(counties, async (county) => {
-    console.log(`Getting docket data for ${county}...`);
-    const form = buildFormData(token, county, filedStartDate, filedEndDate);
-    const resCases = await fetch("https://ujsportal.pacourts.us/CaseSearch", {
-      retryOptions: RETRY_OPTIONS,
-      headers: {
-        ...form.getHeaders(),
-        accept: "*/*",
-        "user-agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36",
-        cookie: cookies,
-      },
-      body: form,
-      method: "POST",
-    })
-      .then((res) => {
-        return exitOnBadStatus(res);
-      })
-      .catch((err) => {
-        throw err;
-      });
-
-    const docketsHtml = await resCases.text();
-    const countyDockets = parseDocketsFromHtml(docketsHtml);
-    docketData.push(...countyDockets);
+  countyQueue = async.queue(scrapeCounty, 5);
+  counties.forEach((county) => {
+    countyQueue.push({ county, cookies, token, filedStartDate, filedEndDate }, (error) => {
+      if (error) {
+        console.log(`An error occurred while processing ${county}`);
+        reject(error);
+      }
+    });
   });
 
-  return docketData;
-};
+  countyQueue.drain(() => {
+    console.log(`All ${counties.length} succesfully processed`);
+    resolve(docketData);
+  })
+});
 
 module.exports = scrape;

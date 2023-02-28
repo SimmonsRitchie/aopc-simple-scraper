@@ -12,6 +12,7 @@
     "@adobe/node-fetch-retry": "^2.2.0",
     "@hapi/bourne": "^3.0.0",
     "@joi/date": "^2.1.0",
+    "async": "^3.2.4",
     "dayjs": "^1.11.7",
     "form-data": "^4.0.0",
     "joi": "^17.8.3",
