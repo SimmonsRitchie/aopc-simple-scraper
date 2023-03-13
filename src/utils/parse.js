@@ -35,16 +35,16 @@ const parseTokenFromDom = (dom) => {
   return elInput.getAttribute("value");
 };
 
-const parseDocketsFromHtml = (html) => {
+const parseDocketsFromHtml = (county, html) => {
   const docketsDom = parse(html);
   const docketsTable = docketsDom.querySelector("div.table-wrapper tbody");
   if (!docketsTable) {
-    throw new ScrapeError(`Expected to extract table element but instead extracted ${docketsTable}. Check the provided HTML`)
+    throw new ScrapeError(`${county}: Expected to extract table element but instead extracted ${docketsTable}. Check the provided HTML`)
   }
   const rows = docketsTable.querySelectorAll("tr");
   const docketData = [];
   const reCrimDockets = /[A-Z]{2}-\d{4,6}-CR-\d{4,8}-\d{4}/;
-  console.log(`Total rows on page: ${rows.length}`);
+  console.log(`${county}: Total rows on page: ${rows.length}`);
   rows.forEach((cell) => {
     const docketId = cell.querySelectorAll("td")[2].textContent;
     const court = cell.querySelectorAll("td")[3].textContent;
@@ -68,16 +68,16 @@ const parseDocketsFromHtml = (html) => {
       });
     }
   });
-  console.log(`Found ${docketData.length} crim dockets`);
+  console.log(`${county}: Found ${docketData.length} crim dockets`);
   const uniqueDocketItems = _.uniqBy(docketData, function (e) {
     return e.docketId;
   });
   const diff = docketData.length - uniqueDocketItems.length;
   if (diff > 0) {
     console.log(
-      `Note: ${diff} crim dockets have duplicate docketIds – removing`
+      `${county}: Note – ${diff} crim dockets have duplicate docketIds – removing`
     );
-    console.log(`Returning ${uniqueDocketItems.length} crim dockets`);
+    console.log(`${county}: Returning ${uniqueDocketItems.length} crim dockets`);
   }
   return uniqueDocketItems;
 };
