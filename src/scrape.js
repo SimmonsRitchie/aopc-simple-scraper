@@ -114,7 +114,7 @@ const scrape = (
   });
 
   countyQueue.drain(() => {
-    console.log(`All ${counties.length} succesfully processed`);
+    console.log(`All ${counties.length} successfully processed`);
     resolve(docketData);
   })
 });
