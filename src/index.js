@@ -10,6 +10,16 @@ const scrape = require("./scrape");
 const { schemaFileDts } = require("./utils/validation");
 const { arrayToCsv } = require("./utils/misc");
 
+
+/**
+ * Scrape criminal case docket data from website of the Administrative Office of Pennsylvania Courts and
+ * save to JSON and CSV files.
+ * @param {String} options.filedStartDate Start date of data to scrape in format 'YYYY-MM-DD'. Defaults to yesterday, New York.
+ * @param {String} options.filedEndDate End date of data to scrape in format 'YYYY-MM-DD'. Defaults to filedStartDate
+ * @param {Array, String} options.counties List of counties to get data for. Use "*" for all counties. Defaults to "*"
+ * @param {Array, String} options.outputPath Where to save the file. Defaults to "./"
+ * @returns undefined
+ */
 const scrapeAndSave = async (
     {
         filedStartDate,
@@ -18,15 +28,6 @@ const scrapeAndSave = async (
         outputPath = "."
     } = {}
 ) => {
-    /**
-     * Scrape criminal case docket data from website of the Administrative Office of Pennsylvania Courts and
-     * save to JSON and CSV files.
-     * @param {String} options.filedStartDate Start date of data to scrape in format 'YYYY-MM-DD'. Defaults to yesterday, New York.
-     * @param {String} options.filedEndDate End date of data to scrape in format 'YYYY-MM-DD'. Defaults to filedStartDate
-     * @param {Array, String} options.counties List of counties to get data for. Use "*" for all counties. Defaults to "*"
-     * @param {Array, String} options.outputPath Where to save the file. Defaults to "./"
-     * @returns undefined
-     */
     // start
     const startTime = dayjs().tz("America/New_York");
     console.log("Scrape begin:", startTime.format("ddd, MMM D, YYYY h:mm A"));
