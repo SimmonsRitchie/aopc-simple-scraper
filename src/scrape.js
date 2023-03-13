@@ -23,7 +23,18 @@ const { schemaFileDts } = require("./utils/validation");
 const docketData = [];
 
 
-const scrapeCounty = async ({ county, cookies, token, filedStartDate, filedEndDate }) => {
+/**
+ * Fetch and parse criminal case dockets for a single county from the website of the
+ * Administrative Office of Pennsylvania Courts. Payload is added to docketData array.
+ * 
+ * @param {String} args.county County to get data for
+ * @param {String} args.cookies Cookies to use for request
+ * @param {String} args.token Token to use for request
+ * @param {String} args.filedStartDate Start date of data to scrape in format 'YYYY-MM-DD'.
+ * @param {String} args.filedEndDate End date of data to scrape in format 'YYYY-MM-DD'.
+ * @returns {undefined} 
+ */
+const scrapeCounty = async ({ county, cookies, token, filedStartDate, filedEndDate } = {}) => {
   console.log(`Getting docket data for ${county}...`);
   const form = buildFormData(token, county, filedStartDate, filedEndDate);
   const resCases = await fetch("https://ujsportal.pacourts.us/CaseSearch", {
