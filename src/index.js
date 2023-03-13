@@ -75,6 +75,7 @@ const scrapeAndSave = async (
     // analyze
     const endTime = dayjs().tz("America/New_York");
     console.log("Scrape end:", endTime.format("ddd, MMM D, YYYY h:mm A"));
+    console.log("Total crim dockets found:", dockets.length);
     const scrapeDurationSec = endTime.diff(startTime, "seconds");
     const scrapeDurationFmt = `${scrapeDurationSec} seconds`;
     console.log(`Scrape duration: ${scrapeDurationFmt}`);
