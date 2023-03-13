@@ -46,26 +46,29 @@ const scrapeCounty = async ({ county, cookies, token, filedStartDate, filedEndDa
     });
 
   const docketsHtml = await resCases.text();
-  const countyDockets = parseDocketsFromHtml(docketsHtml);
+  const countyDockets = parseDocketsFromHtml(county, docketsHtml);
   docketData.push(...countyDockets);
 };
 
 
+/**
+ * Fetch and parse HTML from website of the Administrative Office of Pennsylvania Courts in order to 
+ * get criminal case docket data.
+ * @param {Array, String} counties List of counties to get data for. Use "*" for all counties.
+ * @param {String} filedStartDate Start date of data to scrape in format 'YYYY-MM-DD'.
+ * @param {String} options.filedEndDate End date of data to scrape in format 'YYYY-MM-DD'. Defaults to filedStartDate
+ * @param {Number} options.threadCount Number of threads to handle scrape. A higher number means a faster scrape
+ *  but risks rate-limiting from AOPC's servers. Defaults to 5
+ * @returns {Array} Array of docket data objects
+ */
 const scrape = (
   counties,
   filedStartDate,
   {
     filedEndDate = null,
+    threadCount = 5,
   } = {}
 ) => new Promise(async (resolve, reject) => {
-  /**
-   * Fetch and parse HTML from website of the Administrative Office of Pennsylvania Courts in order to 
-   * get criminal case docket data.
-   * @param {Array, String} counties List of counties to get data for. Use "*" for all counties.
-   * @param {String} filedStartDate Start date of data to scrape in format 'YYYY-MM-DD'.
-   * @param {String} options.filedEndDate End date of data to scrape in format 'YYYY-MM-DD'. Defaults to filedStartDate
-   * @returns {Array} Array of docket data objects
-   */
 
   // validation
   const { error, value } = schemaFileDts.validate({
@@ -103,7 +106,7 @@ const scrape = (
   console.log("Got AOPC cookies and token");
 
   // Step two: Get cases data
-  countyQueue = async.queue(scrapeCounty, 5);
+  countyQueue = async.queue(scrapeCounty, threadCount);
   counties.forEach((county) => {
     countyQueue.push({ county, cookies, token, filedStartDate, filedEndDate }, (error) => {
       if (error) {
